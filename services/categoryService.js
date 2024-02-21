@@ -7,8 +7,11 @@ const asyncHandler = require("express-async-handler");
 //@route    GET /api/v1/categories
 //@access   public
 exports.getCategories = asyncHandler(async (req, res) => {
-  const categories = await categoryModel.find({});
-  res.status(200).json({ results: categories.length, data: categories });
+  const page = req.query.page * 1 || 1;
+  const limit = req.query.limit * 1 || 5;
+  const skip = (page - 1) * limit;
+  const categories = await categoryModel.find({}).skip(skip).limit(limit);
+  res.status(200).json({ results: categories.length, page, data: categories });
 });
 
 //@desc     create category
