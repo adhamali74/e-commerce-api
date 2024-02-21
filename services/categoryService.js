@@ -34,3 +34,38 @@ exports.createCategories = asyncHandler(async (req, res) => {
   const category = await categoryModel.create({ name, slug: slugify(name) });
   res.status(201).json({ data: category });
 });
+
+//@desc      update category
+//@route     POST /api/v1/categories
+//@access    private
+
+exports.updateCategory = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+  const category = await categoryModel.findOneAndUpdate(
+    { _id: id },
+    { name, slug: slugify(name) },
+    { new: true }
+  );
+  if (!category) {
+    res.status(404).json({ msg: "no category for this id:" + id });
+  }
+  res
+    .status(200)
+    .json({ msg: "category updated successfully", data: category });
+});
+
+//@desc     delete category
+//route     DELETE /api/v1/categories
+//accees    private
+
+exports.deleteCategory = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const category = await categoryModel.findOneAndDelete({ _id: id });
+  if (!category) {
+    res.status(404).json({ msg: "no category for this id:" + id });
+  }
+  res
+    .status(200)
+    .json({ msg: "category deleted successfully", data: category });
+});

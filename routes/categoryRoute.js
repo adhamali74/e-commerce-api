@@ -5,8 +5,14 @@ const {
   getCategories,
   createCategories,
   getCategoryById,
+  updateCategory,
+  deleteCategory,
 } = require("../services/categoryService");
 
 router.route("/").get(getCategories).post(createCategories);
-router.route("/:id").get(getCategoryById);
+router
+  .route("/:id")
+  .get(getCategoryById)
+  .put(updateCategory)
+  .delete(deleteCategory);
 module.exports = router;
