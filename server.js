@@ -23,6 +23,11 @@ if (process.env.NODE_ENV === "development") {
 //Mount Routes
 app.use("/api/v1/categories", categoryRoute);
 
+//global error handling
+app.use((err, req, res, next) => {
+  res.status(500).json({ err });
+});
+
 app.listen(process.env.PORT, () => {
   console.log("listening on port " + process.env.PORT);
 });
