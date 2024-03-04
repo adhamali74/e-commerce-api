@@ -8,6 +8,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 dotenv.config({ path: "config.env" });
 const ApiError = require("./utils/apiError");
+const globalError = require("./middlewares/errorMiddleware");
 const dbConnection = require("./config/database");
 const categoryRoute = require("./routes/categoryRoute");
 
@@ -29,16 +30,7 @@ app.all("*", (req, res, next) => {
 });
 
 //global error handling
-app.use((err, req, res, next) => {
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || "error";
-  res.status(err.statusCode).json({
-    status: err.status,
-    error: err,
-    message: err.message,
-    stack: err.stack,
-  });
-});
+app.use(globalError);
 
 app.listen(process.env.PORT, () => {
   console.log("listening on port " + process.env.PORT);
