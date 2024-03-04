@@ -7,6 +7,7 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 dotenv.config({ path: "config.env" });
+const ApiError = require("./utils/apiError");
 const dbConnection = require("./config/database");
 const categoryRoute = require("./routes/categoryRoute");
 
@@ -24,13 +25,12 @@ if (process.env.NODE_ENV === "development") {
 app.use("/api/v1/categories", categoryRoute);
 //creating error and send it to error handler middleware
 app.all("*", (req, res, next) => {
-  const err = new Error("cant find this route" + req.originalUrl);
-  next(err.message);
+  next(new ApiError("cant find this route" + req.originalUrl, 400));
 });
 
 //global error handling
 app.use((err, req, res, next) => {
-  res.status(500).json({ err });
+  res.status(400).json({ err });
 });
 
 app.listen(process.env.PORT, () => {
