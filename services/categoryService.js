@@ -58,12 +58,14 @@ exports.updateCategory = asyncHandler(async (req, res, next) => {
 });
 
 //@desc     delete category
-//route     DELETE /api/v1/categories
-//accees    private
-
-exports.deleteCategory = asyncHandler(async (req, res) => {
+//@route     DELETE /api/v1/categories
+//@access    private
+exports.deleteCategory = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
+  // console.log("Before category deletion");
   const category = await categoryModel.findOneAndDelete({ _id: id });
+  // console.log("After category deletion, category:", category);
+
   if (!category) {
     return next(new ApiError("no category for this id:" + id, 404));
   }
