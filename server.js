@@ -21,6 +21,10 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
   console.log(`mode:${process.env.NODE_ENV}`);
 }
+if (process.env.NODE_ENV === "production") {
+  app.use(morgan("prod"));
+  console.log(`mode:${process.env.NODE_ENV}`);
+}
 
 //Mount Routes
 app.use("/api/v1/categories", categoryRoute);
@@ -32,6 +36,14 @@ app.all("*", (req, res, next) => {
 //global error handling
 app.use(globalError);
 
-app.listen(process.env.PORT, () => {
+const server = app.listen(process.env.PORT, () => {
   console.log("listening on port " + process.env.PORT);
+});
+
+process.on("unhandledRejection", (err) => {
+  console.error(`Unhandled rejection Errors: ${err.name} | ${err.message}`);
+  server.close(() => {
+    console.error("Shutting down ...");
+    process.exit(1);
+  });
 });
