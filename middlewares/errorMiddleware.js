@@ -1,4 +1,16 @@
 /** @format */
+const sendErrorToDev = (err, res) =>
+  res.status(err.statusCode).json({
+    status: err.status,
+    error: err,
+    message: err.message,
+    stack: err.stack,
+  });
+const sendErrorToProd = (err, res) =>
+  res.status(err.statusCode).json({
+    status: err.status,
+    message: err.message,
+  });
 
 const globalError = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
@@ -8,21 +20,6 @@ const globalError = (err, req, res, next) => {
   } else {
     sendErrorToProd(err, res);
   }
-};
-
-const sendErrorToDev = (err, res) => {
-  return res.status(err.statusCode).json({
-    status: err.status,
-    error: err,
-    message: err.message,
-    stack: err.stack,
-  });
-};
-const sendErrorToProd = (err, res) => {
-  return res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message,
-  });
 };
 
 module.exports = globalError;

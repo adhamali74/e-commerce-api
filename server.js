@@ -1,11 +1,11 @@
 /** @format */
 
 const express = require("express");
+
 const app = express();
 const morgan = require("morgan");
 const dotenv = require("dotenv");
-const mongoose = require("mongoose");
-const { Schema } = mongoose;
+
 dotenv.config({ path: "config.env" });
 const ApiError = require("./utils/apiError");
 const globalError = require("./middlewares/errorMiddleware");
@@ -30,14 +30,14 @@ if (process.env.NODE_ENV === "production") {
 app.use("/api/v1/categories", categoryRoute);
 //creating error and send it to error handler middleware
 app.all("*", (req, res, next) => {
-  next(new ApiError("cant find this route" + req.originalUrl, 500));
+  next(new ApiError(`cant find this route ${req.originalUrl}`, 500));
 });
 
 //global error handling
 app.use(globalError);
 
 const server = app.listen(process.env.PORT, () => {
-  console.log("listening on port " + process.env.PORT);
+  console.log(`listening on port ${process.env.PORT}`);
 });
 
 process.on("unhandledRejection", (err) => {
