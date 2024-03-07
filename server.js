@@ -11,6 +11,7 @@ const ApiError = require("./utils/apiError");
 const globalError = require("./middlewares/errorMiddleware");
 const dbConnection = require("./config/database");
 const categoryRoute = require("./routes/categoryRoute");
+const subCategoryRoute = require("./routes/subCategoryRoute");
 
 // connecting db connection
 dbConnection();
@@ -28,6 +29,8 @@ if (process.env.NODE_ENV === "production") {
 
 //Mount Routes
 app.use("/api/v1/categories", categoryRoute);
+app.use("/api/v1/subcategories", subCategoryRoute);
+
 //creating error and send it to error handler middleware
 app.all("*", (req, res, next) => {
   next(new ApiError(`cant find this route ${req.originalUrl}`, 500));

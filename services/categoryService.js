@@ -32,9 +32,11 @@ exports.getCategoryById = asyncHandler(async (req, res, next) => {
 //@route    POST /api/v1/categories
 //@access    private
 exports.createCategories = asyncHandler(async (req, res) => {
-  const { name } = req.body.name;
+  const { name } = req.body;
   const category = await categoryModel.create({ name, slug: slugify(name) });
-  res.status(201).json({ data: category });
+  res
+    .status(201)
+    .json({ msg: "Category Created Successfully", data: category });
 });
 
 //@desc      update category
