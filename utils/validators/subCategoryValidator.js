@@ -31,11 +31,11 @@ exports.updateSubCategoryValidator = [
     .withMessage("SubCategory name must be at least 3 characters long!")
     .isLength({ max: 32 })
     .withMessage("SubCategory name must be not more than 32 characters!"),
-  check("category")
-    .isMongoId()
-    .withMessage("Invalid Category id format !")
-    .notEmpty()
-    .withMessage("SubCategory Must belong to Category! "),
+  // check("category")
+  //   .isMongoId()
+  //   .withMessage("Invalid Category id format !")
+  //   .notEmpty()
+  //   .withMessage("SubCategory Must belong to Category! "),
   validator,
 ];
 

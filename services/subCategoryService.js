@@ -8,7 +8,12 @@ const SubCategory = require("../models/subCategoryModel");
 //@desc     create Subcategory
 //@route    POST /api/v1/subcategories
 //@access    private
-ds;
+
+exports.setCategoryIdToBody = (req, res, next) => {
+  if (!req.body.category) req.body.category = req.params.categoryId;
+  next();
+};
+
 exports.createSubCategory = asyncHandler(async (req, res) => {
   const { name, category } = req.body;
   const subcategory = await SubCategory.create({
@@ -25,11 +30,21 @@ exports.createSubCategory = asyncHandler(async (req, res) => {
 //@route    GET /api/v1/subcategories
 //@access   public
 
+exports.createFilteredObj = (req, res, next) => {
+  let filteredObj = {};
+  if (req.params.categoryId) filteredObj = { category: req.params.categoryId };
+  req.filterObj = filteredObj;
+  next();
+};
+
 exports.getSubCategories = asyncHandler(async (req, res) => {
   const page = req.query.page * 1 || 1;
   const limit = req.query.limit * 1 || 5;
   const skip = (page - 1) * limit;
-  const subCategories = await SubCategory.find({}).skip(skip).limit(limit);
+  const subCategories = await SubCategory.find(req.filterObj)
+    .skip(skip)
+    .limit(limit);
+  // .populate({ path: "category", select: "name" });
   res
     .status(200)
     .json({ results: subCategories.length, page, data: subCategories });
@@ -42,10 +57,15 @@ exports.getSubCategories = asyncHandler(async (req, res) => {
 exports.getSubCategoryById = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const subCategory = await SubCategory.findById(id);
+  // .populate({
+  //   path: "category",
+  //   select: "name",
+  // });
   if (!subCategory) {
     return next(new ApiError(`No subcategory for this id:" ${id}`, 404));
   }
   res.status(200).json({ data: subCategory });
+  next();
 });
 
 //@desc      update subcategory
@@ -66,6 +86,7 @@ exports.updateSubCategory = asyncHandler(async (req, res, next) => {
   res
     .status(200)
     .json({ msg: "subcategory updated successfully", data: subCategory });
+  next();
 });
 
 //@desc     delete subcategory
@@ -81,4 +102,5 @@ exports.deleteSubCategory = asyncHandler(async (req, res, next) => {
   res
     .status(204)
     .json({ msg: "Subcategory deleted successfully", data: subCategory });
+  next();
 });
