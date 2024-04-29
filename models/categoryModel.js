@@ -21,6 +21,4 @@ const categorySchema = new mongoose.Schema(
 );
 //2-Schema Model
 // eslint-disable-next-line new-cap
-const categoryModel = new mongoose.model("Category", categorySchema);
-
-module.exports = categoryModel;
+module.exports = new mongoose.model("Category", categorySchema);

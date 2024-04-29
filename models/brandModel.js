@@ -21,6 +21,4 @@ const BrandSchema = new mongoose.Schema(
 );
 //2-Schema Model
 // eslint-disable-next-line new-cap
-const BrandModel = new mongoose.model("Brand", BrandSchema);
-
-module.exports = BrandModel;
+module.exports = new mongoose.model("Brand", BrandSchema);

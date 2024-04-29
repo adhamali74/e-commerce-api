@@ -26,6 +26,4 @@ const subCategorySchema = new mongoose.Schema(
 );
 //2-Schema Model
 // eslint-disable-next-line new-cap
-const subCategoryModel = new mongoose.model("SubCategory", subCategorySchema);
-
-module.exports = subCategoryModel;
+module.exports = new mongoose.model("SubCategory", subCategorySchema);
