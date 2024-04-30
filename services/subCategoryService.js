@@ -5,14 +5,13 @@ const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/apiError");
 const SubCategory = require("../models/subCategoryModel");
 
-//@desc     create Subcategory
-//@route    POST /api/v1/subcategories
-//@access    private
-
 exports.setCategoryIdToBody = (req, res, next) => {
   if (!req.body.category) req.body.category = req.params.categoryId;
   next();
 };
+//@desc     create Subcategory
+//@route    POST /api/v1/subcategories
+//@access    private
 
 exports.createSubCategory = asyncHandler(async (req, res) => {
   const { name, category } = req.body;

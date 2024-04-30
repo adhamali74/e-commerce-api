@@ -2,17 +2,17 @@
 
 const slugify = require("slugify");
 const asyncHandler = require("express-async-handler");
-const brandModel = require("../models/brandModel");
+const Brand = require("../models/brandModel");
 const ApiError = require("../utils/apiError");
 
-//@desc     get category
-//@route    GET /api/v1/categories
+//@desc     get brands
+//@route    GET /api/v1/brands
 //@access   public
 exports.getBrands = asyncHandler(async (req, res) => {
   const page = req.query.page * 1 || 1;
   const limit = req.query.limit * 1 || 5;
   const skip = (page - 1) * limit;
-  const brands = await brandModel.find({}).skip(skip).limit(limit);
+  const brands = await Brand.find({}).skip(skip).limit(limit);
   res.status(200).json({ results: brands.length, page, data: brands });
 });
 
@@ -21,7 +21,7 @@ exports.getBrands = asyncHandler(async (req, res) => {
 //@access   public
 exports.getBrandById = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  const brand = await brandModel.findById(id);
+  const brand = await Brand.findById(id);
   if (!brand) {
     return next(new ApiError(`No brand for this id:" ${id}`, 404));
   }
@@ -33,7 +33,7 @@ exports.getBrandById = asyncHandler(async (req, res, next) => {
 //@access    private
 exports.createBrand = asyncHandler(async (req, res) => {
   const { name } = req.body;
-  const brand = await brandModel.create({ name, slug: slugify(name) });
+  const brand = await Brand.create({ name, slug: slugify(name) });
   res.status(201).json({ msg: "Brand Created Successfully", data: brand });
 });
 
@@ -44,7 +44,7 @@ exports.createBrand = asyncHandler(async (req, res) => {
 exports.updateBrand = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const { name } = req.body;
-  const brand = await brandModel.findOneAndUpdate(
+  const brand = await Brand.findOneAndUpdate(
     { _id: id },
     { name, slug: slugify(name) },
     { new: true }
@@ -61,7 +61,7 @@ exports.updateBrand = asyncHandler(async (req, res, next) => {
 exports.deleteBrand = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   // console.log("Before category deletion");
-  const brand = await brandModel.findOneAndDelete({ _id: id });
+  const brand = await Brand.findOneAndDelete({ _id: id });
   // console.log("After category deletion, category:", category);
 
   if (!brand) {

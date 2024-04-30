@@ -9,11 +9,11 @@ const {
   updateBrand,
   deleteBrand,
 } = require("../services/brandService");
-const {
-  getCategoryValidator,
+const { 
   createBrandValidator,
   deleteBrandValidator,
   updateBrandValidator,
+  getBrandValidator,
 } = require("../utils/validators/brandValidator");
 
 // const subCategoriesRoute = require("./subCategoryRoute");
@@ -21,9 +21,10 @@ const {
 // router.use("/:categoryId/subcategories", subCategoriesRoute);
 
 router.route("/").get(getBrands).post(createBrandValidator, createBrand);
+
 router
   .route("/:id")
-  .get(getCategoryValidator, getBrandById)
+  .get(getBrandValidator, getBrandById)
   .put(updateBrandValidator, updateBrand)
   .delete(deleteBrandValidator, deleteBrand);
 module.exports = router;
