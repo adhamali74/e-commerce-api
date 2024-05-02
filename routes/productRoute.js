@@ -16,7 +16,6 @@ const {
   updateProductValidator,
 } = require("../utils/validators/productValidator");
 
-// const subCategoriesRoute = require("./subCategoryRoute");
 
 // router.use("/:categoryId/subcategories", subCategoriesRoute);
 
