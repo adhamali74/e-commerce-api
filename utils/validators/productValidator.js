@@ -71,18 +71,21 @@ exports.createProductValidator = [
         }
       })
     ),
-  check("subcategory")
+  check("subcategories")
     .optional()
     .isMongoId()
     .withMessage("Invalid id formate!")
-    .custom((subCategoryId) =>
-      SubCategory.findById(subCategoryId).then((subcategory) => {
-        if (!subcategory) {
-          return Promise.reject(
-            new Error(`No SubCategory for this id:${subCategoryId}`)
-          );
+    .custom((subCategoriesIds) =>
+      SubCategory.find({ _id: { $exists: true, $in: subCategoriesIds } }).then(
+        (result) => {
+          if (result.length < 1 || result.length !== subCategoriesIds.length) {
+            return Promise.reject(new Error(`Invalid SubCategories Ids`));
+          }
         }
-      })
+      )
+    )
+    .custom((val, { req }) =>
+      SubCategory.find({ category: req.body.category })
     ),
   check("brand").optional().isMongoId().withMessage("Invalid id formate!"),
   check("ratingAverage")
