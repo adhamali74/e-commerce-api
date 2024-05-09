@@ -85,7 +85,15 @@ exports.createProductValidator = [
       )
     )
     .custom((val, { req }) =>
-      SubCategory.find({ category: req.body.category })
+      SubCategory.find({ category: req.body.category }).then(
+        (subcategories) => {
+          const subCategoriesIdsInDb = [];
+          subcategories.forEach((subCategory) => {
+            subCategoriesIdsInDb.push(subCategory._id.toString());
+          });
+          console.log(subCategoriesIdsInDb);
+        }
+      )
     ),
   check("brand").optional().isMongoId().withMessage("Invalid id formate!"),
   check("ratingAverage")
