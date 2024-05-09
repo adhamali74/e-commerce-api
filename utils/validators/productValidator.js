@@ -91,7 +91,12 @@ exports.createProductValidator = [
           subcategories.forEach((subCategory) => {
             subCategoriesIdsInDb.push(subCategory._id.toString());
           });
-          console.log(subCategoriesIdsInDb);
+          const checker = (target, arr) => target.every((v) => arr.includes(v));
+          if (!checker(val, subCategoriesIdsInDb)) {
+            return Promise.reject(
+              new Error(`SubCategories not belong to this Category`)
+            );
+          }
         }
       )
     ),
