@@ -9,10 +9,13 @@ const Product = require("../models/productModel");
 //@route    GET /api/v1/products
 //@access   public
 exports.getProducts = asyncHandler(async (req, res) => {
+  // eslint-disable-next-line node/no-unsupported-features/es-syntax
+  const queryObj = { ...req.query };
+  const excludeFields = ["page", "sort", "limit", "field"];
   const page = req.query.page * 1 || 1;
   const limit = req.query.limit * 1 || 5;
   const skip = (page - 1) * limit;
-  const products = await Product.find({})
+  const products = await Product.find(req.query)
     .skip(skip)
     .limit(limit)
     .populate({ path: "category", select: "name -_id" });
