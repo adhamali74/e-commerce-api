@@ -11,7 +11,7 @@ const {
 } = require("../services/productService");
 const {
   getProductValidator,
-  createProductValidator,
+  createProductValidator, 
   deleteProductValidator,
   updateProductValidator,
 } = require("../utils/validators/productValidator");
