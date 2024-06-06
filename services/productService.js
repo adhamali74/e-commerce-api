@@ -13,13 +13,17 @@ exports.getProducts = asyncHandler(async (req, res) => {
   const queryObj = { ...req.query };
   const excludeFields = ["page", "sort", "limit", "field"];
   excludeFields.forEach((field) => delete queryObj[field]);
+  //Apply Filtration using [gte,gt,lte,lt]
+  let queryStr = JSON.stringify(queryObj);
+  queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+
   //pagination
   const page = req.query.page * 1 || 1;
-  const limit = req.query.limit * 1 || 5;
+  const limit = req.query.limit * 1 || 50;
   const skip = (page - 1) * limit;
 
   //Build Query
-  const mongooseQuery = Product.find(queryObj)
+  const mongooseQuery = Product.find(JSON.parse(queryStr))
     .skip(skip)
     .limit(limit)
     .populate({ path: "category", select: "name -_id" });
