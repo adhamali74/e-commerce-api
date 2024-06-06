@@ -9,16 +9,24 @@ const Product = require("../models/productModel");
 //@route    GET /api/v1/products
 //@access   public
 exports.getProducts = asyncHandler(async (req, res) => {
-  // eslint-disable-next-line node/no-unsupported-features/es-syntax
+  //filtering the products list
   const queryObj = { ...req.query };
   const excludeFields = ["page", "sort", "limit", "field"];
+  excludeFields.forEach((field) => delete queryObj[field]);
+  //pagination
   const page = req.query.page * 1 || 1;
   const limit = req.query.limit * 1 || 5;
   const skip = (page - 1) * limit;
-  const products = await Product.find(req.query)
+
+  //Build Query
+  const mongooseQuery = Product.find(queryObj)
     .skip(skip)
     .limit(limit)
     .populate({ path: "category", select: "name -_id" });
+
+  //Execute the query
+  const products = await mongooseQuery;
+
   res.status(200).json({ results: products.length, page, data: products });
 });
 
